@@ -1,3 +1,4 @@
+import Header from "@/components/header";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -23,11 +24,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className="dark sm:pt-2 bg-[url('/bg.jpg')] bg-center bg-cover bg-primary/30 bg-blend-multiply text-foreground"
+      // style={{ backgroundImage: `url("${image}")` }}
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <div className="sm:px-2 max-w-md flex justify-center flex-col items-center mx-auto overflow-x-hidden pb-8 border-border shadow rounded-md bg-background">
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );
