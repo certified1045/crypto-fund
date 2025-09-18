@@ -1,26 +1,30 @@
 import Header from "@/components/header";
+import { BASE_URL } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Separator } from "@radix-ui/react-separator";
-import { DiamondIcon, LoaderCircleIcon } from "lucide-react";
+import { DiamondIcon, GemIcon } from "lucide-react";
 import { notFound } from "next/navigation";
+import Exchange from "./exchange";
+import Image from "next/image";
 
-export default function Home() {
-  return notFound();
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const res = await fetch(`${BASE_URL}/api/user/${id}`, { cache: "no-store" });
+  if (res.status == 404) return notFound();
+  const response = await res.json();
+  console.log({ res, response });
+
   return (
     <div className="sm:px-2 max-w-md flex justify-center flex-col items-center mx-auto overflow-x-hidden pb-8 border-border shadow rounded-md bg-background">
       <Header />
       <main className="flex flex-col gap-8 mt-8 row-start-2 items-center px-2.5">
         <div className="flex font-medium gap-1 items-center">
-          <p className="text-xl">karenft138.t.me</p>
+          <p className="text-xl">{`${response?.users?.username}.t.me`}</p>
           <span className="text-xs px-1.5 py-1 rounded bg-border text-chart-2 relative top-0.5">
             Deal in progress
           </span>
@@ -36,14 +40,20 @@ export default function Home() {
             <tr>
               <td className="text-center py-1 text-center text-xs py-2">
                 <span className="gap-0.5 flex items-center font-medium justify-center text-lg text-foreground">
-                  <DiamondIcon size={16} />
+                  <GemIcon
+                    className="text-primary relative top-0.5"
+                    size={16}
+                  />
                   3000
                 </span>
                 ~$9255.9
               </td>
               <td className="text-center py-1 text-center text-xs py-2">
                 <span className="gap-0.5 flex items-center font-medium justify-center text-lg text-foreground">
-                  <DiamondIcon size={16} />
+                  <GemIcon
+                    className="text-primary relative top-0.5"
+                    size={16}
+                  />
                   150
                 </span>
                 ~$462.8
@@ -61,39 +71,25 @@ export default function Home() {
         <Card className="w-full py-2 px-4 gap-2">
           <span className="flex justify-between items-center w-full">
             <p className="font-medium">Telegram Username</p>
-            <p className="text-sm text-primary">@karenft138</p>
+            <p className="text-sm text-primary">@{response?.users?.username}</p>
           </span>
           <Separator className="w-full" />
           <span className="flex justify-between items-center w-full">
             <p className="font-medium">Web Adddress</p>
-            <p className="text-sm text-primary">t.me/karenft138</p>
+            <p className="text-sm text-primary">
+              t.me/{response?.users?.username}
+            </p>
           </span>
           <Separator className="w-full" />
           <span className="flex justify-between items-center w-full">
             <p className="font-medium">TON Web 3.0 Address</p>
-            <p className="text-sm text-primary">karenft138.t.me</p>
+            <p className="text-sm text-primary">
+              {response?.users?.username}.t.me
+            </p>
           </span>
         </Card>
         <div className="w-full">
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="w-full">Start Exchange</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader className="sm:text-center">
-                <DialogTitle>
-                  <LoaderCircleIcon
-                    size={72}
-                    className="mx-auto text-foreground/50 py-5 animate-spin"
-                  />
-                  Preparing Transactions
-                </DialogTitle>
-                <DialogDescription>
-                  Preparing transaction, Please wait...
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+          <Exchange />
           <Button className="w-full" variant="ghost">
             Subscribe to updates
           </Button>
@@ -101,8 +97,14 @@ export default function Home() {
             <p className="text-center">
               You do not needd to complete KYC verification, as the buyer is a
               verified merchant on a Fragment that has a verified deposit of{" "}
-              <span className="inline-flex items-center">
-                <DiamondIcon size={14} /> 25,000
+              <span className="inline-flex items-center relative top-1 font-medium">
+                <Image
+                  src="/diamond.png"
+                  alt="diamond icon"
+                  width={20}
+                  height={20}
+                />{" "}
+                25,000
               </span>
             </p>
           </Card>

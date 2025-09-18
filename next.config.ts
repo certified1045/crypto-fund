@@ -3,6 +3,9 @@ const nextConfig = {
   images: {
     domains: ["example.com"],
   },
+  // experimental: {
+  //   serverActions: true,
+  // },
 };
 
 export default nextConfig;
