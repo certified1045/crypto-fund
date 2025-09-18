@@ -5,5 +5,5 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002";
+export const BASE_URL = "https://crypto-fund-nine.vercel.app";
+// process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002";
