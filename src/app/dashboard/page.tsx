@@ -3,6 +3,8 @@ import { DataTable } from "@/components/table/data-table";
 import { BASE_URL } from "@/lib/utils";
 import AddUser from "./add-user";
 
+console.log;
+
 export default async function Page() {
   console.log({ BASE_URL });
   const res = await fetch(`${BASE_URL}/api/user`, { cache: "no-store" });
