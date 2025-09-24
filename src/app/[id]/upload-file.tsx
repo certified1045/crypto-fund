@@ -40,7 +40,7 @@ export default function UploadFile({
   setOpenDialog: Dispatch<SetStateAction<boolean>>;
 }) {
   const [isUploading, setIsUploading] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
+  // const [files, setFiles] = useState<File[]>([]);
 
   const form = useForm<z.infer<typeof fileUploadSchema>>({
     resolver: zodResolver(fileUploadSchema),
@@ -48,7 +48,7 @@ export default function UploadFile({
   });
 
   const onUpload: NonNullable<FileUploadProps["onUpload"]> = useCallback(
-    async (files, { onProgress }) => {
+    async (files) => {
       try {
         const formInput = new FormData();
         formInput.append("file", files[0]);
@@ -120,7 +120,7 @@ export default function UploadFile({
               <FormLabel>Upload your evidence of payment</FormLabel>
               <FormControl>
                 <FileUpload
-                  onAccept={(files) => setFiles(files)}
+                  // onAccept={(files) => setFiles(files)}
                   onUpload={onUpload}
                   disabled={isUploading}
                   value={field.value}

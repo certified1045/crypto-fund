@@ -1,14 +1,11 @@
 "use client";
 
-import { BitcoinIcon, FileIcon, UserPlusIcon, UsersIcon } from "lucide-react";
+import { BitcoinIcon, FileIcon, UsersIcon } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
-import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,

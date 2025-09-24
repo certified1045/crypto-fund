@@ -1,13 +1,11 @@
-// app/api/settings/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/db/db";
-import { payments, settings } from "@/db/schema/schema";
-import { revalidatePath } from "next/cache";
+import { payments } from "@/db/schema/schema";
 
 export async function POST(req: Request) {
   try {
     const { userId, imgURL } = await req.json();
-    const v = await db.insert(payments).values({
+    await db.insert(payments).values({
       userId,
       imgURL,
     });

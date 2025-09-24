@@ -3,14 +3,8 @@
 import { useState } from "react";
 import {
   ColumnDef,
-  // ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";

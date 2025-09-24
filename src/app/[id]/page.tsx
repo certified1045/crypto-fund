@@ -3,7 +3,7 @@ import { BASE_URL } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
-import { DiamondIcon, GemIcon } from "lucide-react";
+import { GemIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import Exchange from "./exchange";
 import Image from "next/image";

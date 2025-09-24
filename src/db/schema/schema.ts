@@ -4,7 +4,6 @@ import {
   varchar,
   timestamp,
   pgEnum,
-  json,
   text,
   serial,
 } from "drizzle-orm/pg-core";

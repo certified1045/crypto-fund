@@ -1,4 +1,4 @@
-// "use client"
+"use client";
 
 import { Control } from "react-hook-form";
 import { useEditor, EditorContent } from "@tiptap/react";
