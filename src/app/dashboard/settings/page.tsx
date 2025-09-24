@@ -1,5 +1,6 @@
+import { Card } from "@/components/ui/card";
 import { BASE_URL } from "@/lib/utils";
-import EditAddress from "./edit-address";
+import EditDetails from "./edit-details";
 
 export default async function Page() {
   const res = await fetch(`${BASE_URL}/api/address`, { cache: "no-store" });
@@ -11,9 +12,15 @@ export default async function Page() {
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
       <div className="flex items-center justify-between">
         <h4 className="text-xl font-meduim">Wallet Address</h4>
-        <EditAddress address={response.value} />
+        <EditDetails address={response.value} />
       </div>
-      <p>{response.value}</p>
+      {response?.value && (
+        <Card className="p-3">
+          <div dangerouslySetInnerHTML={{ __html: response?.value }} />
+        </Card>
+      )}
+
+      {/* <p>{response.value}</p> */}
     </main>
   );
 }

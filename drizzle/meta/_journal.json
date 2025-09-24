@@ -15,6 +15,20 @@
       "when": 1758210148955,
       "tag": "0001_skinny_doctor_doom",
       "breakpoints": false
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758718323879,
+      "tag": "0002_romantic_juggernaut",
+      "breakpoints": false
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1758721063964,
+      "tag": "0003_normal_valeria_richards",
+      "breakpoints": false
     }
   ]
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { BitcoinIcon, FileIcon, UserPlusIcon } from "lucide-react";
+import { BitcoinIcon, FileIcon, UserPlusIcon, UsersIcon } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
@@ -26,9 +26,9 @@ const data = {
   },
   projects: [
     {
-      name: "Add User",
+      name: "Users",
       url: "/dashboard",
-      icon: UserPlusIcon,
+      icon: UsersIcon,
     },
     {
       name: "View Receipts",
@@ -75,9 +75,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* <NavMain items={data.navMain} /> */}
         <NavProjects projects={data.projects} />
       </SidebarContent>
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <NavUser user={data.user} />
-      </SidebarFooter>
+      </SidebarFooter> */}
       <SidebarRail />
     </Sidebar>
   );

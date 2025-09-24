@@ -24,9 +24,11 @@ import {
 } from "@/components/ui/form";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function AddUser() {
   const [openDialog, setOpenDialog] = useState(false);
+  const router = useRouter();
   const form = useForm<z4.infer<typeof addUserSchema>>({
     resolver: zodResolver(addUserSchema),
   });
@@ -45,6 +47,7 @@ export default function AddUser() {
         console.log({ response });
         setOpenDialog(false);
         toast.success("User added successfully");
+        router.refresh();
       }
     } catch (err) {
       console.log({ err });

@@ -3,7 +3,6 @@ import {
   pgTable,
   varchar,
   timestamp,
-  integer,
   pgEnum,
   json,
   text,
@@ -31,7 +30,7 @@ export const payments = pgTable("payments", {
     .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  imgURLs: json("img_urls").$type<string[]>(),
+  imgURL: text("img_url").notNull(),
 });
 
 export const settings = pgTable("settings", {
@@ -39,8 +38,11 @@ export const settings = pgTable("settings", {
   value: text("value").notNull(),
 });
 
-export const userRelations = relations(users, ({ many }) => ({
-  favourites: many(payments, { relationName: "userPayment" }),
+export const userRelations = relations(users, ({ one }) => ({
+  payments: one(payments, {
+    fields: [users.id],
+    references: [payments.userId],
+  }),
 }));
 
 export const paymentRelations = relations(payments, ({ one }) => ({
@@ -53,5 +55,5 @@ export const paymentRelations = relations(payments, ({ one }) => ({
 
 export type Payment = InferSelectModel<typeof payments>;
 export type User = InferSelectModel<typeof users> & {
-  profile: Payment | null;
+  payment: Payment | null;
 };

@@ -10,15 +10,15 @@ export async function GET(
   try {
     console.log({ _ });
     const { id } = await params;
-    const row = await db
-      .select()
-      .from(users)
-      .leftJoin(payments, eq(payments.userId, users.id))
-      .where(eq(users.id, id));
-    if (!row.length)
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, id),
+      with: { payments: true },
+    });
 
-    return NextResponse.json(row[0]);
+    if (!user)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    console.log({ user });
+    return NextResponse.json({ users: user });
   } catch (err) {
     console.log({ err });
     return NextResponse.json(

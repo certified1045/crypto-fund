@@ -4,6 +4,7 @@ import { User } from "@/db/schema/schema";
 import { BASE_URL } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -15,6 +16,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
+type Payment = {
+  createdAt: Date;
+  imgURLs: string;
+  user: {
+    username: string;
+  };
+};
 
 export const UsersColumns: ColumnDef<User>[] = [
   {
@@ -83,4 +93,50 @@ export const UsersColumns: ColumnDef<User>[] = [
   //     <div>{!!row.getValue("verified") ? "Verified" : "Unverified"}</div>
   //   ),
   // },
+];
+
+export const UsersReceipts: ColumnDef<Payment>[] = [
+  {
+    header: "Username",
+    cell: ({ row }) => {
+      return <div className="">{row.original.user.username}</div>;
+    },
+  },
+  {
+    header: "Receipt",
+    cell: ({ row }) => {
+      return (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button>View Receipt</Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 h-80">
+            <div className="relative">
+              <Image
+                src={row.original.imgURL!}
+                alt="Verification document"
+                className="h-full w-full"
+                height={240}
+                width={240}
+                priority
+              />
+            </div>
+            {/* <Image
+                  src="http://res.cloudinary.com/dyez5iyvm/image/upload/v1747189588/kyllejpjsniete7eexjg.svg"
+                  alt="Verification document"
+                  fill
+                /> */}
+          </PopoverContent>
+        </Popover>
+      );
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Uploaded Date",
+    cell: ({ row }) => {
+      const date = new Date(row.getValue("createdAt"));
+      return <div>{date.toISOString().slice(0, 10)}</div>;
+    },
+  },
 ];

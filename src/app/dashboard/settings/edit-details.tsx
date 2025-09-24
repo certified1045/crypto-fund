@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { addAddressSchema } from "@/lib/zodSchema";
 import { useForm } from "react-hook-form";
 import z4 from "zod/v4";
@@ -15,21 +14,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useState } from "react";
 import { toast } from "sonner";
+import { TiptapEditor } from "@/components/tip-tap/TipTapEditor";
+import { useRouter } from "next/navigation";
 
-export default function EditAddress({ address }: { address?: string }) {
+export default function EditDetails({ address }: { address?: string }) {
   const [openDialog, setOpenDialog] = useState(false);
+  const router = useRouter();
   const form = useForm<z4.infer<typeof addAddressSchema>>({
     resolver: zodResolver(addAddressSchema),
-    defaultValues: { address },
+    defaultValues: { details: address },
   });
 
   async function onsubmit(body: z4.infer<typeof addAddressSchema>) {
@@ -46,6 +42,7 @@ export default function EditAddress({ address }: { address?: string }) {
         console.log({ response });
         setOpenDialog(false);
         toast.success("User added successfully");
+        router.refresh();
       }
     } catch (err) {
       console.log({ err });
@@ -56,18 +53,19 @@ export default function EditAddress({ address }: { address?: string }) {
   return (
     <Dialog onOpenChange={setOpenDialog} open={openDialog}>
       <DialogTrigger asChild>
-        <Button>Edit Address</Button>
+        <Button>Edit Details</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader className="sm:text-center">
-          <DialogTitle>Edit Address</DialogTitle>
+          <DialogTitle>Edit Details</DialogTitle>
           <DialogDescription>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onsubmit)}
                 className="space-y-3"
               >
-                <FormField
+                <TiptapEditor control={form.control} />
+                {/* <FormField
                   control={form.control}
                   name="address"
                   render={({ field }) => (
@@ -77,7 +75,7 @@ export default function EditAddress({ address }: { address?: string }) {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
                 <Button
                   className="w-full mt-2"
                   disabled={form.formState.isSubmitting}

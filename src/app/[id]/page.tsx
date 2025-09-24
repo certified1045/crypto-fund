@@ -89,7 +89,7 @@ export default async function Page({
           </span>
         </Card>
         <div className="w-full">
-          <Exchange />
+          <Exchange payment={response?.user?.payments} userId={id} />
           <Button className="w-full" variant="ghost">
             Subscribe to updates
           </Button>

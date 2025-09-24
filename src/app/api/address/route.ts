@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { settings } from "@/db/schema/schema";
 import { addAddressSchema } from "@/lib/zodSchema";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   try {
@@ -15,11 +16,13 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     const key = "address";
-    const value = parsed.data?.address;
+    const value = parsed.data?.details;
+
     await db.insert(settings).values({ key, value }).onConflictDoUpdate({
       target: settings.key,
       set: { value },
     });
+    revalidatePath("/dashboard/settings");
     return NextResponse.json({ success: true });
   } catch (err) {
     console.log({ err });
