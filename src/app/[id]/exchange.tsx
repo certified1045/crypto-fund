@@ -40,8 +40,8 @@ export default function Exchange({
       const response = await res.json();
       console.log({ response });
       if (res.ok) {
-        setAddress(response.find((v) => v?.key == "address")?.value || "");
-        setDetails(response.find((v) => v?.key == "details")?.value || "");
+        setAddress(response?.find((v) => v?.key == "address")?.value || "");
+        setDetails(response?.find((v) => v?.key == "details")?.value || "");
       } else {
         setOpenDialog(false);
         toast.error("Unable to get addresses", {

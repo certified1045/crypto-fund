@@ -10,8 +10,8 @@ export default async function Page() {
 
   console.log({ response });
 
-  const address = response.find((v) => v.key == "address")?.value || "";
-  const details = response.find((v) => v.key == "details")?.value || "";
+  const address = response?.find((v) => v.key == "address")?.value || "";
+  const details = response?.find((v) => v.key == "details")?.value || "";
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
