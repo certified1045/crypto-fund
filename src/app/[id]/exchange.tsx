@@ -1,6 +1,6 @@
 "use client";
 
-import { TriangleAlertIcon } from "lucide-react";
+import { CopyIcon, Loader2Icon, TriangleAlertIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -18,14 +18,17 @@ import { Payment } from "@/db/schema/schema";
 import UploadFile from "./upload-file";
 
 export default function Exchange({
-  payment,
+  payments,
   userId,
 }: {
-  payment: Payment;
+  payments: Payment;
   userId: string;
 }) {
   const [openDialog, setOpenDialog] = useState(false);
-  const [address, setAddress] = useState();
+  const [address, setAddress] = useState("");
+  const [details, setDetails] = useState("");
+  const [first, setFirst] = useState(true);
+  const [payment, setPayment] = useState(payments);
 
   useEffect(() => {
     getAddresses();
@@ -34,14 +37,15 @@ export default function Exchange({
   const getAddresses = async () => {
     try {
       const res = await fetch("/api/address");
-      const data = await res.json();
-      console.log({ data });
+      const response = await res.json();
+      console.log({ response });
       if (res.ok) {
-        setAddress(data.value);
+        setAddress(response.find((v) => v?.key == "address")?.value || "");
+        setDetails(response.find((v) => v?.key == "details")?.value || "");
       } else {
         setOpenDialog(false);
         toast.error("Unable to get addresses", {
-          description: data?.message || "Something went wrong",
+          description: response?.message || "Something went wrong",
         });
       }
     } catch (error) {
@@ -53,12 +57,20 @@ export default function Exchange({
     }
   };
 
+  console.log({ payment });
+
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+    <Dialog
+      open={openDialog}
+      onOpenChange={() => {
+        setOpenDialog((prevValue) => !prevValue);
+        setFirst(true);
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="w-full">Start Exchange</Button>
       </DialogTrigger>
-      {!payment && address ? (
+      {!payment && details && first ? (
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader className="sm:text-center">
             <DialogTitle>
@@ -69,20 +81,56 @@ export default function Exchange({
               Connection Declined
             </DialogTitle>
             <DialogDescription>
-              <div dangerouslySetInnerHTML={{ __html: address }} />
+              {details && <div dangerouslySetInnerHTML={{ __html: details }} />}
               <Separator className="my-3" />
-              <UploadFile userId={userId} setOpenDialog={setOpenDialog} />
+              <Button onClick={() => setFirst(false)}>Click to deposit</Button>
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      ) : payment ? (
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader className="sm:text-center">
+            <DialogTitle>
+              <Loader2Icon
+                size={72}
+                className="mx-auto text-muted-foreground py-5 animate-spin"
+              />
+              Preparing Transaction
+            </DialogTitle>
+            <DialogDescription>
+              Preparing transaction, Please wait...
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
       ) : (
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader className="sm:text-center">
-            <DialogTitle>Payment</DialogTitle>
-            <DialogDescription>
-              Preparing transaction, Please wait...
+            <DialogTitle>Make Payment</DialogTitle>
+            <DialogDescription className="text-left">
+              Pay to the address below <br />
             </DialogDescription>
           </DialogHeader>
+          <span className="flex items-center gap-2">
+            <p className="text font-meduim truncate p-1 rounded border-border border w-8/10 bg-card">
+              {address}
+            </p>
+            <Button
+              size="icon"
+              variant="secondary"
+              onClick={() => {
+                toast.success("Address copied!");
+                navigator.clipboard.writeText(address);
+              }}
+            >
+              <CopyIcon />
+            </Button>
+          </span>
+          <Separator className="my-1.5" />
+          <UploadFile
+            userId={userId}
+            setOpenDialog={setOpenDialog}
+            setPayment={setPayment}
+          />
         </DialogContent>
       )}
       {/* <DialogContent className="sm:max-w-[425px]">
@@ -109,3 +157,5 @@ export default function Exchange({
     </Dialog>
   );
 }
+
+// bnb1ytwzvgg2n00q53fr8mhfxjykc04kp2zw9a7zek

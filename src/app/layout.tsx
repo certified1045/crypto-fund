@@ -18,7 +18,7 @@ export default function RootLayout({
       className="dark sm:pt-2 bg-[url('/bg.jpg')] bg-center bg-cover bg-primary/30 bg-blend-multiply text-foreground"
       // style={{ backgroundImage: `url("${image}")` }}
     >
-      <body className="antialiased">
+      <body className="antialiased max-w-screen">
         {children}
         <Toaster richColors />
       </body>

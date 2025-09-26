@@ -5,7 +5,7 @@ export const addUserSchema = z.object({
 });
 
 export const addAddressSchema = z.object({
-  details: z.string().min(50, { message: "Too short" }),
+  details: z.string().min(10, { message: "Too short" }),
 });
 
 export const fileUploadSchema = z.object({

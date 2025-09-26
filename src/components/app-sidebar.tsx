@@ -1,6 +1,6 @@
 "use client";
 
-import { BitcoinIcon, FileIcon, UsersIcon } from "lucide-react";
+import { BitcoinIcon, FileIcon, Settings2Icon, UsersIcon } from "lucide-react";
 
 import { NavProjects } from "@/components/nav-projects";
 import {
@@ -33,9 +33,9 @@ const data = {
       icon: FileIcon,
     },
     {
-      name: "Payment Address",
+      name: "Settings",
       url: "/dashboard/settings",
-      icon: BitcoinIcon,
+      icon: Settings2Icon,
     },
   ],
 };

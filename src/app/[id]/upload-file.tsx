@@ -31,13 +31,24 @@ import {
   FileUploadTrigger,
   type FileUploadProps,
 } from "@/components/ui/file-upload";
+import { useRouter } from "next/navigation";
 
 export default function UploadFile({
   userId,
   setOpenDialog,
+  setPayment,
 }: {
   userId: string;
   setOpenDialog: Dispatch<SetStateAction<boolean>>;
+  setPayment: Dispatch<
+    SetStateAction<{
+      userId: string;
+      id: number;
+      imgURL: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }>
+  >;
 }) {
   const [isUploading, setIsUploading] = useState(false);
   // const [files, setFiles] = useState<File[]>([]);
@@ -62,7 +73,7 @@ export default function UploadFile({
           }
         );
         const response = await res.json();
-        await fetch("/api/payment", {
+        const resData = await fetch("/api/payment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -73,6 +84,8 @@ export default function UploadFile({
             imgURL: response?.secure_url,
           }),
         });
+        const responseData = await resData.json();
+        setPayment(responseData);
         toast.success("File uploaded successfully");
       } catch (error) {
         console.log({ error });

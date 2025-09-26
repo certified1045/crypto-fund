@@ -9,14 +9,10 @@ import { revalidatePath } from "next/cache";
 export async function POST(req: Request) {
   try {
     const payload = await req.json();
-    const parsed = addAddressSchema.safeParse(payload);
-    if (!parsed.success)
-      return NextResponse.json(
-        { error: parsed.error.flatten() },
-        { status: 400 }
-      );
-    const key = "address";
-    const value = parsed.data?.details;
+    // const parsed = addAddressSchema.safeParse(payload);
+
+    const key = payload.key;
+    const value = payload.value;
 
     await db.insert(settings).values({ key, value }).onConflictDoUpdate({
       target: settings.key,
@@ -37,10 +33,11 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    const [allSettings] = await db
-      .select()
-      .from(settings)
-      .where(eq(settings.key, "address"));
+    // const allSettings = await db
+    //   .select()
+    //   .from(settings)
+    //   .where(eq(settings.key, "address"));
+    const allSettings = await db.query.settings.findMany();
     if (!allSettings) {
       return new NextResponse(
         JSON.stringify({
@@ -49,6 +46,7 @@ export async function GET() {
         { status: 404 }
       );
     }
+    console.log({ allSettings });
     return NextResponse.json(allSettings);
   } catch (err) {
     console.log({ err });
