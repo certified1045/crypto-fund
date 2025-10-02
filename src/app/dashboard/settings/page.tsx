@@ -12,6 +12,7 @@ export default async function Page() {
 
   const address = response?.find((v) => v.key == "address")?.value || "";
   const details = response?.find((v) => v.key == "details")?.value || "";
+  const eth = response?.find((v) => v.key == "eth")?.value || "";
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -29,10 +30,24 @@ export default async function Page() {
       <Card className="p-3">
         <span className="flex justify-between items-center">
           <h3 className="text-lg">Payment Address</h3>
-          <EditAddress address={address} />
+          <EditAddress address={address} eth={eth} />
         </span>
         <Separator />
-        {address && <p>{address}</p>}
+        {address && (
+          <div className="space-y-1">
+            <p className="text-lg font-meduim text-primary">TON address:</p>
+            <p>{address}</p>
+          </div>
+        )}
+        {eth && (
+          <>
+            <Separator />
+            <div className="space-y-1">
+              <p className="text-lg font-meduim text-primary">ETH address:</p>
+              <p>{eth}</p>
+            </div>
+          </>
+        )}
       </Card>
 
       {/* <p>{response.value}</p> */}

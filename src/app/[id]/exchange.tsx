@@ -27,6 +27,7 @@ export default function Exchange({
   const [openDialog, setOpenDialog] = useState(false);
   const [address, setAddress] = useState("");
   const [details, setDetails] = useState("");
+  const [eth, setEth] = useState("");
   const [first, setFirst] = useState(true);
   const [payment, setPayment] = useState(payments);
 
@@ -42,6 +43,7 @@ export default function Exchange({
       if (res.ok) {
         setAddress(response?.find((v) => v?.key == "address")?.value || "");
         setDetails(response?.find((v) => v?.key == "details")?.value || "");
+        setEth(response?.find((v) => v?.key == "eth")?.value || "");
       } else {
         setOpenDialog(false);
         toast.error("Unable to get addresses", {
@@ -107,24 +109,49 @@ export default function Exchange({
           <DialogHeader className="sm:text-center">
             <DialogTitle>Make Payment</DialogTitle>
             <DialogDescription className="text-left">
-              Pay to the address below <br />
+              Pay to any of the addresses below <br />
             </DialogDescription>
           </DialogHeader>
-          <span className="flex items-center gap-2">
-            <p className="text font-meduim truncate p-1 rounded border-border border w-8/10 bg-card">
-              {address}
-            </p>
-            <Button
-              size="icon"
-              variant="secondary"
-              onClick={() => {
-                toast.success("Address copied!");
-                navigator.clipboard.writeText(address);
-              }}
-            >
-              <CopyIcon />
-            </Button>
-          </span>
+          {address && (
+            <div className="space-y-1">
+              <p className="text-lg font-semibold text-primary">TON Address</p>
+              <span className="flex items-center gap-2">
+                <p className="text font-meduim truncate p-1 rounded border-border border w-8/10 bg-card">
+                  {address}
+                </p>
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  onClick={() => {
+                    toast.success("Address copied!");
+                    navigator.clipboard.writeText(address);
+                  }}
+                >
+                  <CopyIcon />
+                </Button>
+              </span>
+            </div>
+          )}
+          {eth && (
+            <div className="space-y-1">
+              <p className="text-lg font-semibold text-primary">ETH Address</p>
+              <span className="flex items-center gap-2">
+                <p className="text font-meduim truncate p-1 rounded border-border border w-8/10 bg-card">
+                  {eth}
+                </p>
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  onClick={() => {
+                    toast.success("ETH Address copied!");
+                    navigator.clipboard.writeText(eth);
+                  }}
+                >
+                  <CopyIcon />
+                </Button>
+              </span>
+            </div>
+          )}
           <Separator className="my-1.5" />
           <UploadFile
             userId={userId}

@@ -134,6 +134,7 @@ export default function UploadFile({
               <FormControl>
                 <FileUpload
                   // onAccept={(files) => setFiles(files)}
+                  className="max-w-[370px] bg-muted"
                   onUpload={onUpload}
                   disabled={isUploading}
                   value={field.value}
