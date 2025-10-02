@@ -27,3 +27,61 @@ export async function GET(
     );
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const [user] = await db.delete(users).where(eq(users.id, id)).returning();
+
+    if (!user)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({
+      users: user,
+      message: `${user.username} deleted successfully`,
+    });
+  } catch (err) {
+    console.log({ err });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { username } = await req.json();
+  if (!username)
+    return NextResponse.json(
+      { error: "Username field missing" },
+      { status: 400 }
+    );
+  try {
+    const { id } = await params;
+    const [user] = await db
+      .update(users)
+      .set({ username: username })
+      .where(eq(users.id, id))
+      .returning();
+
+    console.log({ user });
+
+    if (!user)
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({
+      users: user,
+      message: `${user.username} edited successfully`,
+    });
+  } catch (err) {
+    console.log({ err });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
+  }
+}

@@ -1,11 +1,13 @@
 "use client";
 
+import EditUser from "@/app/dashboard/edit-user";
 import { User } from "@/db/schema/schema";
 import { BASE_URL } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontalIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
@@ -20,7 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type Payment = {
   createdAt: Date;
-  imgURLs: string;
+  imgURL: string;
   user: {
     username: string;
   };
@@ -58,6 +60,25 @@ export const UsersColumns: ColumnDef<User>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
+      const router = useRouter();
+      async function deleteUser() {
+        try {
+          const res = await fetch(`/api/user/${row.original.id}`, {
+            method: "DELETE",
+          });
+          const response = await res.json();
+          if (res.ok) {
+            console.log({ response });
+            toast.success(response?.message || "User deleted successfully");
+            router.refresh();
+          }
+        } catch (err) {
+          console.log({ err });
+          toast.error("User not deleted", {
+            description: "Something went wrong",
+          });
+        }
+      }
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -79,8 +100,12 @@ export const UsersColumns: ColumnDef<User>[] = [
               Copy Link
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete user</DropdownMenuItem>
-            <DropdownMenuItem>Edit username</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => deleteUser()}>
+              Delete user
+            </DropdownMenuItem>
+            {/* <DropdownMenuItem > */}
+            <EditUser id={row.original.id} username={row.original.username} />
+            {/* </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -113,7 +138,7 @@ export const UsersReceipts: ColumnDef<Payment>[] = [
           <PopoverContent className="w-80 h-80">
             <div className="relative">
               <Image
-                src={row.original.imgURL!}
+                src={row.original.imgURL}
                 alt="Verification document"
                 className="h-full w-full"
                 height={240}

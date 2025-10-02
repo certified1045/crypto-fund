@@ -8,7 +8,7 @@ export default async function Page() {
   const res = await fetch(`${BASE_URL}/api/user`, { cache: "no-store" });
   console.log({ res });
   const response = await res.json();
-  console.log({ response });
+  console.log({ response: JSON.stringify(response) });
   // const response = [];
 
   return (
