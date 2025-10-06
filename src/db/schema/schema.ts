@@ -18,6 +18,7 @@ export const users = pgTable("users", {
   username: varchar("username", { length: 50 }).notNull().unique(),
   email: varchar("email", { length: 255 }).unique(),
   role: roleEnum("role").default("user").notNull(),
+  walletAdress: varchar("wallet_address", { length: 255 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

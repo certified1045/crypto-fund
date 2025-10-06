@@ -105,7 +105,7 @@ export default function Exchange({
           </DialogHeader>
         </DialogContent>
       ) : (
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto overflow-x-hidden">
           <DialogHeader className="sm:text-center">
             <DialogTitle>Make Payment</DialogTitle>
             <DialogDescription className="text-left">

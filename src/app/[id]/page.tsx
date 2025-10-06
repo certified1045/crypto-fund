@@ -7,6 +7,14 @@ import { GemIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import Exchange from "./exchange";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default async function Page({
   params,
@@ -63,7 +71,35 @@ export default async function Page({
           <tfoot>
             <tr>
               <td className="pl-4 py-2" colSpan={2}>
-                How does this work?
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="link" className="text-foreground/70">
+                      How does this work?
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader className="sm:text-center">
+                      <DialogTitle>How it works</DialogTitle>
+                      <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    <div className="">
+                      <h4 className="text-lg font-semibold">
+                        Q: Are there any fees?
+                      </h4>
+                      <p>
+                        A: When you sell a collectible, a 5% platform security
+                        deposit fee is applied. This helps keep transactions
+                        safe and secure.
+                      </p>
+                    </div>
+                    <p className="mt-5">
+                      In addition, the blockchain may charge a small network fee
+                      (around 1 Toncoin). This part isn’t controlled by us, but
+                      don’t worry, it’s fully refundable once your
+                      sale is completed.
+                    </p>
+                  </DialogContent>
+                </Dialog>
               </td>
             </tr>
           </tfoot>
@@ -126,7 +162,7 @@ export default async function Page({
                 </td>
                 <td className="text-center py-2">Swappable</td>
                 <td className="text-center py-2 line-clamp-1 max-w-28 truncate inline-block">
-                  UQCFJEP4WZ_mpdo0_kME
+                  {response?.users?.walletAdress}
                 </td>
               </tr>
             </tbody>

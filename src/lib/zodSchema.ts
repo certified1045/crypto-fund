@@ -17,4 +17,6 @@ export const fileUploadSchema = z.object({
       message: "File size must be less than 5MB",
       path: ["files"],
     }),
+  network: z.string({ error: "Required" }).min(1, { error: "Required" }),
+  address: z.string({ error: "Required" }).min(1, { error: "Required" }),
 });

@@ -31,7 +31,15 @@ import {
   FileUploadTrigger,
   type FileUploadProps,
 } from "@/components/ui/file-upload";
-import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
+import { SelectTrigger } from "@radix-ui/react-select";
 
 export default function UploadFile({
   userId,
@@ -51,7 +59,7 @@ export default function UploadFile({
   >;
 }) {
   const [isUploading, setIsUploading] = useState(false);
-  // const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   const form = useForm<z.infer<typeof fileUploadSchema>>({
     resolver: zodResolver(fileUploadSchema),
@@ -73,20 +81,21 @@ export default function UploadFile({
           }
         );
         const response = await res.json();
-        const resData = await fetch("/api/payment", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            userId,
-            imgURL: response?.secure_url,
-          }),
-        });
-        const responseData = await resData.json();
-        setPayment(responseData);
-        toast.success("File uploaded successfully");
+        // const resData = await fetch("/api/payment", {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   credentials: "include",
+        //   body: JSON.stringify({
+        //     userId,
+        //     imgURL: response?.secure_url,
+        //   }),
+        // });
+        // const responseData = await resData.json();
+        setFiles(response?.secure_url);
+        // setPayment(responseData);
+        // toast.success("File uploaded successfully");
       } catch (error) {
         console.log({ error });
         // toast.error("Could not upload file")
@@ -95,7 +104,6 @@ export default function UploadFile({
         });
       } finally {
         setIsUploading(false);
-        setOpenDialog(false);
       }
     },
     []
@@ -109,8 +117,36 @@ export default function UploadFile({
   //     });
   //   }, []);
 
-  const handleSubmit = (body: z.infer<typeof fileUploadSchema>) => {
+  const handleSubmit = async (body: z.infer<typeof fileUploadSchema>) => {
     console.log({ body });
+    if (!files) {
+      toast.error("Unable to Submit", {
+        description: "Upload the image again",
+      });
+      return;
+    }
+    try {
+      const resData = await fetch("/api/payment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId,
+          imgURL: files,
+        }),
+      });
+      const responseData = await resData.json();
+      setPayment(responseData);
+      toast.success("Details uploaded successfully");
+    } catch (err) {
+      toast.error("Unable to Submit", {
+        description: "Upload the image again",
+      });
+    } finally {
+      setOpenDialog(false);
+    }
   };
 
   const all = form.watch();
@@ -134,7 +170,7 @@ export default function UploadFile({
               <FormControl>
                 <FileUpload
                   // onAccept={(files) => setFiles(files)}
-                  className="max-w-[370px] bg-muted"
+                  className="max-w-[360px] bg-muted"
                   onUpload={onUpload}
                   disabled={isUploading}
                   value={field.value}
@@ -173,8 +209,13 @@ export default function UploadFile({
                             size="icon"
                             className="size-7"
                             type="button"
+                            disabled={isUploading}
                           >
-                            <XIcon />
+                            {isUploading ? (
+                              <LoaderIcon className="animate-spin mx-auto inline-block" />
+                            ) : (
+                              <XIcon />
+                            )}
                             <span className="sr-only">Delete</span>
                           </Button>
                         </FileUploadItemDelete>
@@ -190,23 +231,61 @@ export default function UploadFile({
             </FormItem>
           )}
         />
-        {isUploading && (
-          <div className="space-y-1">
-            <LoaderIcon className="animate-spin mx-auto inline-block" />
-            <p className="text-center">
-              The Image is been uploaded <br /> Please wait...
-            </p>
-          </div>
-        )}
-        {/* <Button
-          disabled={form.formState.isSubmitted || isUploading}
-          className="w-full mt-2"
+        <Separator />
+        <FormField
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <FormItem className="max-w-[360px]">
+              <FormLabel>Address</FormLabel>
+              <FormControl>
+                <Input placeholder="eg: bc1qp3a80dx..." {...field} />
+              </FormControl>
+              <FormMessage />
+              <FormDescription>
+                Input your wallet address where you will like to receive your
+                payment
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="network"
+          render={({ field }) => (
+            <FormItem className="max-w-[360px]">
+              <FormLabel>Select ETH/TON</FormLabel>
+              <Select
+                onValueChange={(e) => {
+                  field.onChange(e);
+                }}
+              >
+                <FormControl>
+                  <SelectTrigger className="max-w-[360px] border-input data-[placeholder]:text-muted-foreground bg-input/30 bg-input/50 flex w-full rounded-md border bg-transparent px-3 py-2 text-sm shadow-xs focus-visible:ring-[3px]">
+                    <SelectValue placeholder="Select blockchain" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {["ETH", "TON"].map((reason) => (
+                    <SelectItem value={reason} key={reason}>
+                      {reason}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          disabled={form.formState.isSubmitting || isUploading}
+          className="w-full max-w-[360px] mt-2"
         >
-          {form.formState.isSubmitted && (
+          {(form.formState.isSubmitting || isUploading) && (
             <LoaderIcon className="animate-spin" />
           )}
-          Submit
-        </Button> */}
+          {isUploading ? "Processing images..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );
