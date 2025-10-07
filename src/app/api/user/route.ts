@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const [u] = await db
       .insert(users)
       .values({
+        ...parsed.data,
         username: parsed.data.username.toLowerCase(),
       })
       .returning();
@@ -64,6 +65,7 @@ export const GET = async () => {
     console.log({ u });
     return new NextResponse(JSON.stringify({ data: u }), { status: 201 });
   } catch (err) {
+    console.error({ err });
     return new NextResponse(JSON.stringify(err), { status: 500 });
   }
 };

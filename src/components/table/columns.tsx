@@ -33,10 +33,24 @@ export const UsersColumns: ColumnDef<User>[] = [
     accessorKey: "username",
     header: "Username",
   },
-  // {
-  //   accessorKey: "email",
-  //   header: "Email",
-  // },
+  {
+    accessorKey: "dealPrice",
+    header: "Deal Price",
+  },
+  {
+    accessorKey: "securityDeposit",
+    header: "Security Deposit",
+  },
+  {
+    header: "Wallet Address",
+    cell: ({ row }) => {
+      return (
+        <div className="text-center truncate">
+          {row.original.walletAdress || "-"}
+        </div>
+      );
+    },
+  },
   {
     header: "User Link",
     cell: ({ row }) => {
@@ -104,7 +118,7 @@ export const UsersColumns: ColumnDef<User>[] = [
               Delete user
             </DropdownMenuItem>
             {/* <DropdownMenuItem > */}
-            <EditUser id={row.original.id} username={row.original.username} />
+            <EditUser id={row.original.id} username={row.original} />
             {/* </DropdownMenuItem> */}
           </DropdownMenuContent>
         </DropdownMenu>

@@ -6,6 +6,7 @@ import {
   pgEnum,
   text,
   serial,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role_type", ["admin", "user", "moderator"]);
@@ -16,6 +17,8 @@ export const users = pgTable("users", {
     .notNull()
     .default(sql`gen_random_uuid()`),
   username: varchar("username", { length: 50 }).notNull().unique(),
+  dealPrice: integer("deal_price").notNull().default(3000),
+  securityDeposit: integer("security_deposit").notNull().default(150),
   email: varchar("email", { length: 255 }).unique(),
   role: roleEnum("role").default("user").notNull(),
   walletAdress: varchar("wallet_address", { length: 255 }),

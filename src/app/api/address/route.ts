@@ -1,9 +1,7 @@
 // app/api/settings/route.ts
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { settings } from "@/db/schema/schema";
-import { addAddressSchema } from "@/lib/zodSchema";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {

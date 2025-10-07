@@ -80,6 +80,28 @@ export default function AddUser() {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="dealPrice"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Deal Price</FormLabel>
+                      <Input {...field} type="number" />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="securityDeposit"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Security Deposit</FormLabel>
+                      <Input {...field} type="number" />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <Button
                   className="w-full mt-2"
                   disabled={form.formState.isSubmitting}

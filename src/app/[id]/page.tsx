@@ -3,7 +3,7 @@ import { BASE_URL } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@radix-ui/react-separator";
-import { GemIcon } from "lucide-react";
+import { EditIcon, GemIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 import Exchange from "./exchange";
 import Image from "next/image";
@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Wallet from "./wallet";
 
 export default async function Page({
   params,
@@ -52,7 +53,7 @@ export default async function Page({
                     className="text-primary relative top-0.5"
                     size={16}
                   />
-                  3000
+                  {response?.users?.dealPrice}
                 </span>
                 ~$9255.9
               </td>
@@ -62,7 +63,7 @@ export default async function Page({
                     className="text-primary relative top-0.5"
                     size={16}
                   />
-                  150
+                  {response?.users?.securityDeposit}
                 </span>
                 ~$462.8
               </td>
@@ -124,6 +125,45 @@ export default async function Page({
             </p>
           </span>
         </Card>
+        <Card className="w-full py-2 px-4 gap-2">
+          {response?.users?.walletAdress ? (
+            <div className="flex gap-2 items-center max-w-[calc(100vw-1.625rem)]">
+              <p className="text-lg font-semibold whitespace-nowrap">
+                Your wallet:
+              </p>
+              <p className="truncate w-full">{response?.users?.walletAdress}</p>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button size="icon" variant="ghost">
+                    <EditIcon />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader className="sm:text-center">
+                    <DialogTitle>Add Wallet Address</DialogTitle>
+                    <DialogDescription></DialogDescription>
+                  </DialogHeader>
+                  <Wallet id={id} address={response?.users?.walletAdress} />
+                </DialogContent>
+              </Dialog>
+            </div>
+          ) : (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="link" className="text-foreground/70">
+                  Click here to add your wallet address
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader className="sm:text-center">
+                  <DialogTitle>Add Wallet Address</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+                <Wallet id={id} />
+              </DialogContent>
+            </Dialog>
+          )}
+        </Card>
         <div className="w-full">
           <Exchange payments={response?.users?.payments} userId={id} />
           <Button className="w-full" variant="ghost">
@@ -131,7 +171,7 @@ export default async function Page({
           </Button>
           <Card className="text-primary-foreground bg-primary">
             <p className="text-center">
-              You do not needd to complete KYC verification, as the buyer is a
+              You do not need to complete KYC verification, as the buyer is a
               verified merchant on a Fragment that has a verified deposit of{" "}
               <span className="inline-flex items-center relative top-1 font-medium">
                 <Image
@@ -147,7 +187,7 @@ export default async function Page({
         </div>
         <div className="w-full">
           <h2 className="text-xl mb-3 font-semibold">Trade Info</h2>
-          <table className="w-full text-foreground/70 bg-border rounded-md">
+          <table className="w-full text-foreground/70 bg-border rounded-md max-w-[calc(100vw-0.625rem)]">
             <thead className="bg-foreground/10">
               <tr>
                 <th className="py-2">Deal Status</th>

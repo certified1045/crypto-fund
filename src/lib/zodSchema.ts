@@ -2,6 +2,8 @@ import * as z from "zod/v4";
 
 export const addUserSchema = z.object({
   username: z.string().min(2),
+  dealPrice: z.coerce.number({ error: "Required" }).positive(),
+  securityDeposit: z.coerce.number({ error: "Required" }).positive(),
 });
 
 export const addAddressSchema = z.object({
@@ -17,6 +19,9 @@ export const fileUploadSchema = z.object({
       message: "File size must be less than 5MB",
       path: ["files"],
     }),
+});
+
+export const editAddressSchema = z.object({
   network: z.string({ error: "Required" }).min(1, { error: "Required" }),
   address: z.string({ error: "Required" }).min(1, { error: "Required" }),
 });

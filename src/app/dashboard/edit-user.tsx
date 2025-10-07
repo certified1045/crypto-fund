@@ -25,19 +25,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { User } from "@/db/schema/schema";
 
 export default function EditUser({
   username,
   id,
 }: {
-  username: string;
+  username: User;
   id: string;
 }) {
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
   const form = useForm<z4.infer<typeof addUserSchema>>({
     resolver: zodResolver(addUserSchema),
-    defaultValues: { username },
+    defaultValues: { ...username },
   });
 
   async function onsubmit(body: z4.infer<typeof addUserSchema>) {
@@ -65,11 +66,11 @@ export default function EditUser({
   return (
     <Sheet onOpenChange={setOpenDialog} open={openDialog}>
       <SheetTrigger className="cursor-default rounded-sm px-2 py-1.5 text-sm">
-        Edit Username
+        Edit User
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Edit Username</SheetTitle>
+          <SheetTitle>Edit User</SheetTitle>
           <SheetDescription>
             <Form {...form}>
               <form
@@ -83,6 +84,28 @@ export default function EditUser({
                     <FormItem className="w-full">
                       <FormLabel>Username</FormLabel>
                       <Input {...field} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="dealPrice"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Deal Price</FormLabel>
+                      <Input {...field} type="number" />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="securityDeposit"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>Security Deposit</FormLabel>
+                      <Input {...field} type="number" />
                       <FormMessage />
                     </FormItem>
                   )}

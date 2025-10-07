@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { users } from "@/db/schema/schema";
+import { addUserSchema } from "@/lib/zodSchema";
 
 export async function GET(
   _: Request,
@@ -55,17 +56,18 @@ export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const { username } = await req.json();
-  if (!username)
+  const payload = await req.json();
+  const parsed = addUserSchema.safeParse(payload);
+  if (!parsed.success)
     return NextResponse.json(
-      { error: "Username field missing" },
+      { error: parsed.error.flatten() },
       { status: 400 }
     );
   try {
     const { id } = await params;
     const [user] = await db
       .update(users)
-      .set({ username: username })
+      .set({ ...parsed.data })
       .where(eq(users.id, id))
       .returning();
 

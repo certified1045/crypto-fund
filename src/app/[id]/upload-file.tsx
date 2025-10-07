@@ -39,7 +39,6 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { SelectTrigger } from "@radix-ui/react-select";
 
 export default function UploadFile({
   userId,
@@ -231,7 +230,7 @@ export default function UploadFile({
             </FormItem>
           )}
         />
-        <Separator />
+        {/* <Separator />
         <FormField
           control={form.control}
           name="address"
@@ -248,8 +247,8 @@ export default function UploadFile({
               </FormDescription>
             </FormItem>
           )}
-        />
-        <FormField
+        /> */}
+        {/* <FormField
           control={form.control}
           name="network"
           render={({ field }) => (
@@ -276,7 +275,7 @@ export default function UploadFile({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
         <Button
           disabled={form.formState.isSubmitting || isUploading}
           className="w-full max-w-[360px] mt-2"
