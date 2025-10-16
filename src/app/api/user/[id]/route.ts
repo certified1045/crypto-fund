@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { users } from "@/db/schema/schema";
-import { addUserSchema } from "@/lib/zodSchema";
+import { addUserSchema, editUserSchema } from "@/lib/zodSchema";
 
 export async function GET(
   _: Request,
@@ -57,7 +57,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const payload = await req.json();
-  const parsed = addUserSchema.safeParse(payload);
+  const parsed = editUserSchema.safeParse(payload);
   if (!parsed.success)
     return NextResponse.json(
       { error: parsed.error.flatten() },
@@ -65,9 +65,10 @@ export async function PUT(
     );
   try {
     const { id } = await params;
+    const { dealPrice, progress, securityDeposit, username } = parsed.data;
     const [user] = await db
       .update(users)
-      .set({ ...parsed.data })
+      .set({ dealPrice, progress: progress[0], securityDeposit, username })
       .where(eq(users.id, id))
       .returning();
 

@@ -16,13 +16,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Payment } from "@/db/schema/schema";
 import UploadFile from "./upload-file";
+import { Progress } from "@/components/ui/progress";
 
 export default function Exchange({
   payments,
   userId,
+  progress,
 }: {
-  payments: Payment;
+  payments: Payment | null;
   userId: string;
+  progress: number;
 }) {
   const [openDialog, setOpenDialog] = useState(false);
   const [address, setAddress] = useState("");
@@ -93,15 +96,17 @@ export default function Exchange({
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader className="sm:text-center">
             <DialogTitle>
-              <Loader2Icon
+              {/* <Loader2Icon
                 size={72}
                 className="mx-auto text-muted-foreground py-5 animate-spin"
-              />
-              Preparing Transaction
+              /> */}
+              <p className="text-sm text-left">Transfer progress...</p>
+              <span className="flex items-center gap-2">
+                <Progress value={progress} className="my-4" />
+                <p>{progress}%</p>
+              </span>
             </DialogTitle>
-            <DialogDescription>
-              Preparing transaction, Please wait...
-            </DialogDescription>
+            <DialogDescription>Transfer is still in progress</DialogDescription>
           </DialogHeader>
         </DialogContent>
       ) : (

@@ -7,6 +7,7 @@ import {
   text,
   serial,
   integer,
+  smallint,
 } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role_type", ["admin", "user", "moderator"]);
@@ -22,6 +23,7 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).unique(),
   role: roleEnum("role").default("user").notNull(),
   walletAdress: varchar("wallet_address", { length: 255 }),
+  progress: smallint("progress").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -58,5 +60,5 @@ export const paymentRelations = relations(payments, ({ one }) => ({
 
 export type Payment = InferSelectModel<typeof payments>;
 export type User = InferSelectModel<typeof users> & {
-  payment: Payment | null;
+  payments: Payment | null;
 };

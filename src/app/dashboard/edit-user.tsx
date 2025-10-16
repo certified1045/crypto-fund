@@ -2,13 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { addUserSchema } from "@/lib/zodSchema";
+import { editUserSchema } from "@/lib/zodSchema";
 import { useForm } from "react-hook-form";
-import z4 from "zod/v4";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderIcon } from "lucide-react";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -26,6 +27,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { User } from "@/db/schema/schema";
+import { Slider } from "@/components/ui/slider";
 
 export default function EditUser({
   username,
@@ -36,12 +38,19 @@ export default function EditUser({
 }) {
   const [openDialog, setOpenDialog] = useState(false);
   const router = useRouter();
-  const form = useForm<z4.infer<typeof addUserSchema>>({
-    resolver: zodResolver(addUserSchema),
-    defaultValues: { ...username },
+  const form = useForm<z.infer<typeof editUserSchema>>({
+    resolver: zodResolver(editUserSchema),
+    defaultValues: {
+      dealPrice: username.dealPrice,
+      progress: [username.progress],
+      username: username.username,
+      securityDeposit: username.securityDeposit,
+    },
   });
 
-  async function onsubmit(body: z4.infer<typeof addUserSchema>) {
+  const [progress] = form.watch("progress");
+
+  async function onsubmit(body: z.infer<typeof editUserSchema>) {
     console.log({ body });
     try {
       const res = await fetch(`/api/user/${id}`, {
@@ -56,6 +65,10 @@ export default function EditUser({
         setOpenDialog(false);
         toast.success(response?.message || "User added successfully");
         router.refresh();
+      } else {
+        toast.error("User not editted", {
+          description: "Something went wrong",
+        });
       }
     } catch (err) {
       console.log({ err });
@@ -107,6 +120,35 @@ export default function EditUser({
                       <FormLabel>Security Deposit</FormLabel>
                       <Input {...field} type="number" />
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="progress"
+                  render={({ field: { name, onChange, value, ref } }) => (
+                    <FormItem className="">
+                      <span className="flex items-center justify-between mb-1.5">
+                        <FormLabel>Progress</FormLabel>
+                        <span className="flex gap-2">
+                          <p>{progress}%</p>
+                        </span>
+                      </span>
+                      <FormControl>
+                        <Slider
+                          name={name}
+                          ref={ref}
+                          value={value}
+                          min={0}
+                          max={100}
+                          step={1}
+                          onValueChange={onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      <p className="text-destructive text-sm">
+                        {form.formState.errors?.progress?.[0]?.message}
+                      </p>
                     </FormItem>
                   )}
                 />

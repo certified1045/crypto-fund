@@ -18,6 +18,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
+import { ChevronRight } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -105,6 +111,25 @@ export function DataTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      {/* <div className="block md:hidden space-y-4">
+        {table.getRowModel().rows.map((row) => (
+          <div
+            key={row.id}
+            className="rounded-xl border p-4 shadow-sm bg-card text-card-foreground"
+          >
+            {row.getVisibleCells().map((cell) => (
+              <div key={cell.id} className="flex flex-col py-1">
+                <span className="text-sm font-medium text-muted-foreground">
+                  {cell.column.columnDef.header as string}
+                </span>
+                <span className="text-base">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div> */}
       {pageSize > 5 && (
         <div className="flex items-center justify-end space-x-2 py-4 mr-2 text-sm">
           <span className="flex items-center gap-1 grow ml-5">

@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Wallet from "./wallet";
+import { User } from "@/db/schema/schema";
 
 export default async function Page({
   params,
@@ -25,7 +26,7 @@ export default async function Page({
   const { id } = await params;
   const res = await fetch(`${BASE_URL}/api/user/${id}`, { cache: "no-store" });
   if (res.status == 404) return notFound();
-  const response = await res.json();
+  const response = (await res.json()) as { users: User };
   console.log({ res, response });
 
   return (
@@ -165,7 +166,11 @@ export default async function Page({
           )}
         </Card>
         <div className="w-full">
-          <Exchange payments={response?.users?.payments} userId={id} />
+          <Exchange
+            payments={response?.users?.payments}
+            progress={response?.users?.progress}
+            userId={id}
+          />
           <Button className="w-full" variant="ghost">
             Subscribe to updates
           </Button>
