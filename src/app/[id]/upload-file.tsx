@@ -49,12 +49,12 @@ export default function UploadFile({
   setOpenDialog: Dispatch<SetStateAction<boolean>>;
   setPayment: Dispatch<
     SetStateAction<{
-      userId: string;
       id: number;
-      imgURL: string;
       createdAt: Date;
       updatedAt: Date;
-    }>
+      userId: string;
+      imgURL: string;
+    } | null>
   >;
 }) {
   const [isUploading, setIsUploading] = useState(false);

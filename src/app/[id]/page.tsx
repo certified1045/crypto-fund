@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import Wallet from "./wallet";
 import { User } from "@/db/schema/schema";
+import { Progress } from "@/components/ui/progress";
 
 export default async function Page({
   params,
@@ -166,11 +167,16 @@ export default async function Page({
           )}
         </Card>
         <div className="w-full">
-          <Exchange
-            payments={response?.users?.payments}
-            progress={response?.users?.progress}
-            userId={id}
-          />
+          {response?.users.payments && (
+            <>
+              <p className="text-sm text-left">Transfer progress...</p>
+              <span className="flex items-center gap-2 w-full mb-8">
+                <Progress value={response?.users?.progress} />
+                <p>{response?.users?.progress}%</p>
+              </span>
+            </>
+          )}
+          <Exchange payments={response?.users?.payments} userId={id} />
           <Button className="w-full" variant="ghost">
             Subscribe to updates
           </Button>
